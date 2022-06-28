@@ -6,7 +6,7 @@
 /*   By: mattif <mattif@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 02:59:21 by mattif            #+#    #+#             */
-/*   Updated: 2022/06/17 19:21:53 by mattif           ###   ########.fr       */
+/*   Updated: 2022/06/24 21:40:48 by mattif           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,41 @@ void	exit_err(int error)
 		write(2, "positive numbers only\n", 23);
 	if (error == 2)
 		write(2, "Too many arguments\n", 20);
-	exit(0);
 }
 
-long long	ft_atoi(const char *str)
+int	ft_isdigit(const char c)
 {
-	int				i;
-	int				n;
-	long long		res;
+	return (c >= '0' && c <= '9');
+}
+
+int	ft_atoi(const char *str)
+{
+	size_t			i;
+	long long		n;
+	long long		sign;
 
 	i = 0;
-	res = 0;
-	n = 1;
-	while (str[i] == '\n' || str[i] == '\r' || str[i] == '\t'
-		||str[i] == '\f' || str[i] == '\v' || str[i] == ' ' )
+	n = 0;
+	sign = 1;
+	if (str[i] == '+')
 		i++;
-	if (str[i] == '-' || str[i] == '+')
+	else if (str[i] == '-')
 	{
-		if (str[i] == '-')
-			n = -n;
+		sign *= -1;
 		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (str[i] && ft_isdigit(str[i]))
 	{
-		res = res * 10 + (str[i] - '0');
+		n *= 10;
+		n += str[i] - '0';
 		i++;
 	}
-	return (res * n);
+	if (str[i] && !ft_isdigit(str[i]))
+		exit_err(1);
+	return ((int)sign * (int)n);
 }
 
-int check_death(t_phl *philos, int num)
+int	check_death(t_phl *philos, int num)
 {
 	int	i;
 
@@ -65,7 +70,6 @@ int check_death(t_phl *philos, int num)
 				pthread_mutex_lock(philos[i].print);
 				printf("%lld ms philosopher %d died\n",
 					time_passed(philos[i % num].start), philos[i % num].id);
-				usleep(100);
 				return (1);
 			}
 			i++;
@@ -76,3 +80,17 @@ int check_death(t_phl *philos, int num)
 	return (0);
 }
 
+void	init_start(t_phl *philo, int num)
+{
+	long long		start;
+	int				i;
+
+	i = 0;
+	start = time_passed(0);
+	while (i < num)
+	{
+		philo[i].last_meal = start;
+		philo[i].start = start;
+		i++;
+	}
+}

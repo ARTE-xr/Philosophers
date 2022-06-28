@@ -6,7 +6,7 @@
 /*   By: mattif <mattif@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/17 12:58:21 by mattif            #+#    #+#             */
-/*   Updated: 2022/06/17 20:36:34 by mattif           ###   ########.fr       */
+/*   Updated: 2022/06/24 21:40:37 by mattif           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,35 @@ long long	time_passed(long long start_time)
 	return (elapsed_time);
 }
 
-int check_eat(t_phl *philo, int num)
+int	check_eat(t_phl *philo, int num)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < num)
 	{
-		if(philo[0].the_num)
-			return (0) ;
+		if (philo[0].the_num)
+			return (0);
 		i++;
 	}
 	return (1);
 }
 
-int ft_check(t_args args)
+int	ft_check(t_args args)
 {
 	if (args.nb_of_phl <= 0 || args.time_to_die <= 0
-		|| args.time_to_eat <= 0 | args.sleep <=0)
+		|| args.time_to_eat <= 0 || args.sleep <= 0)
+	{
 		exit_err(1);
+		return (1);
+	}
 	return (0);
 }
 
-void init_phls(t_phl *philo, t_args args, int ac)
+void	init_phls(t_phl *philo, t_args args, int ac)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	while (i < args.nb_of_phl)
 	{
@@ -66,7 +70,8 @@ void init_phls(t_phl *philo, t_args args, int ac)
 	}	
 }
 
-void init_mutex(pthread_mutex_t *mutex, t_phl *philo, int num, pthread_mutex_t *print)
+void	init_mutex(pthread_mutex_t *mutex, t_phl *philo, int num,
+		pthread_mutex_t *print)
 {
 	int	i;
 
@@ -82,21 +87,6 @@ void init_mutex(pthread_mutex_t *mutex, t_phl *philo, int num, pthread_mutex_t *
 	{
 		philo[i].left_fork = &mutex[i % num];
 		philo[i].right_fork = &mutex[(i + 1) % num];
-		i++;
-	}
-}
-
-void	init_start(t_phl *philo, int num)
-{
-	long long		start;
-	int				i;
-
-	i = 0;
-	start = time_passed(0);
-	while (i < num)
-	{
-		philo[i].last_meal = start;
-		philo[i].start = start;
 		i++;
 	}
 }

@@ -6,16 +6,16 @@
 /*   By: mattif <mattif@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:25:05 by mattif            #+#    #+#             */
-/*   Updated: 2022/06/17 20:37:54 by mattif           ###   ########.fr       */
+/*   Updated: 2022/06/24 21:35:22 by mattif           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void destroy_all_mutexes(pthread_mutex_t *forks, int num)
+void	destroy_all_mutexes(pthread_mutex_t *forks, int num)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (i < num)
 	{
@@ -30,7 +30,7 @@ void	*routine(void *philo)
 
 	philosopher = (t_phl *) philo;
 	if (philosopher->id % 2)
-		usleep(1100);
+		usleep(1000);
 	pthread_mutex_lock(philosopher->left_fork);
 	pthread_mutex_lock(philosopher->print);
 	printf("%lld ms philosopher %d has taken a fork\n",
@@ -71,11 +71,11 @@ void	*ft_sleep(void *philo)
 	return (NULL);
 }
 
-void go_routine(t_phl *philosophers, int num)
+void	go_routine(t_phl *philosophers, int num)
 {
-	pthread_mutex_t *forks;
-	pthread_mutex_t print;
-	int i;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print;
+	int				i;
 
 	forks = malloc(sizeof(pthread_mutex_t) * num);
 	if (!forks)
@@ -85,7 +85,8 @@ void go_routine(t_phl *philosophers, int num)
 	init_start(philosophers, num);
 	while (i < num)
 	{
-		pthread_create(&philosophers[i].philo_thread, NULL, &routine, &philosophers[i]);
+		pthread_create(&philosophers[i].philo_thread, NULL,
+			&routine, &philosophers[i]);
 		i++;
 	}
 	if (check_death(philosophers, num))
